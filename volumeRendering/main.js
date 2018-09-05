@@ -30,6 +30,7 @@ var VolumeRenderingPlugin = class VolumeRenderingPlugin extends OHIF.plugins.Vie
         if (!displaySet) {
             displaySet = OHIF.plugins.ViewportPlugin.getDisplaySet(viewportIndex);
         }
+      
 
         div.style.position = "relative";
 

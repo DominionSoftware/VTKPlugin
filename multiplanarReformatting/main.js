@@ -29,7 +29,6 @@ var MultiplanarReformattingPlugin = class MultiplanarReformattingPlugin extends 
         const imageData = imageDataObject.vtkImageData;
 
         div.innerHTML = '';
-        this.labelTopLeft1 = vtk.Interaction.Widgets.LabelWidget.newInstance();
 
         /*
 
@@ -75,7 +74,7 @@ var MultiplanarReformattingPlugin = class MultiplanarReformattingPlugin extends 
         const renderer = volumeViewer.getRenderer();
         const renderWindow = volumeViewer.getRenderWindow();
 
-        renderer.addVolume(actor);
+        renderer.addActor(actor);
 
         const scanDirection = imageDataObject.orientation;
         if (!viewDirection) {
@@ -109,9 +108,7 @@ var MultiplanarReformattingPlugin = class MultiplanarReformattingPlugin extends 
         interactorStyle.setDirectionalProperties(initialValues);
         interactorStyle.setInteractionMode('IMAGE_SLICE');
         renderWindow.getInteractor().setInteractorStyle(interactorStyle);
-        this.labelTopLeft1.setInteractor(renderWindow.getInteractor());
-        this.labelTopLeft1.setEnabled(1);
-        this.labelTopLeft1.getWidgetRep().setLabelText('Hello world! \n This is an example!');
+
 
         renderer.resetCamera();
         renderer.resetCameraClippingRange();
