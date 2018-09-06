@@ -25,6 +25,7 @@ var VolumeRenderingPlugin = class VolumeRenderingPlugin extends OHIF.plugins.Vie
     }
 
     setupViewport(div, { viewportIndex = 0 }, displaySet) {
+        const viewportWrapper =  div.parentElement;
         console.warn(`${this.name}|setupViewport: viewportIndex: ${viewportIndex}`);
 
         if (!displaySet) {
@@ -32,7 +33,7 @@ var VolumeRenderingPlugin = class VolumeRenderingPlugin extends OHIF.plugins.Vie
         }
       
 
-        div.style.position = "relative";
+        viewportWrapper.style.position = "relative";
 
         const { VTKUtils } = window;
         const imageDataObject = VTKUtils.getImageData(displaySet);
@@ -64,7 +65,7 @@ var VolumeRenderingPlugin = class VolumeRenderingPlugin extends OHIF.plugins.Vie
 
         const isDark = true;
         VolumeRenderingPlugin.installVTKVolumeController(this.controllerWidget,volumeViewer,actor,isDark);
-        this.controllerWidget.setContainer(div);
+        this.controllerWidget.setContainer(viewportWrapper);
     }
 
     static setupVTKActor(imageData) {
