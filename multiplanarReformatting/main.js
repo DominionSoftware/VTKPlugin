@@ -23,11 +23,11 @@ var MultiplanarReformattingPlugin = class MultiplanarReformattingPlugin extends 
     setupViewportText(divParentElement,viewDirection,displaySet){
 
         // TODO , why aren't style sheets loading?
-        divParentElement.style.color = '#91b9cd';
         divParentElement.style.position = "relative";
+        divParentElement.style.color = '#91b9cd';
         ///////// TOP LEFT
-        const topLeftParent = document.createElement('div');
         topLeftParent.style.position="absolute";
+        const topLeftParent = document.createElement('div');
         topLeftParent.style.top="10px";
         topLeftParent.style.left="10px";
         topLeftParent.id = viewDirection + "TopLeft";
@@ -39,15 +39,15 @@ var MultiplanarReformattingPlugin = class MultiplanarReformattingPlugin extends 
         PatientId.id = 'PatientId';
         topLeftParent.appendChild(PatientId);
 
-        divParentElement.appendChild(topLeftParent);
         //////////// BOT LEFT
-        const botLeftParent = document.createElement('div');
+        divParentElement.appendChild(topLeftParent);
         botLeftParent.style.position="absolute";
+        const botLeftParent = document.createElement('div');
         botLeftParent.style.bottom="10px";
         botLeftParent.style.left="10px";
         botLeftParent.id = viewDirection + "BottomLeft";
-        const SeriesNumber = document.createElement('div');
         SeriesNumber.id = 'SeriesNumber';
+        const SeriesNumber = document.createElement('div');
         botLeftParent.appendChild(SeriesNumber);
         const SliceNumber = document.createElement('div');
         SliceNumber.id = 'SliceNumber';
@@ -55,8 +55,8 @@ var MultiplanarReformattingPlugin = class MultiplanarReformattingPlugin extends 
         const ColsRows = document.createElement('div');
         ColsRows.id = 'ColsRows';
         botLeftParent.appendChild(ColsRows);
-
         const SliceThickness = document.createElement('div');
+
         SliceThickness.id = 'SliceThickness';
         botLeftParent.appendChild(SliceThickness);
         const SeriesDescription = document.createElement('div');
@@ -70,14 +70,14 @@ var MultiplanarReformattingPlugin = class MultiplanarReformattingPlugin extends 
         topRightParent.style.top="10px";
         topRightParent.style.right="10px";
         topRightParent.id = viewDirection + "TopRight";
-        const StudyDescription = document.createElement('div');
         StudyDescription.id = 'StudyDescription';
+        const StudyDescription = document.createElement('div');
         topRightParent.appendChild(StudyDescription);
         const SeriesDate = document.createElement('div');
         SeriesDate.id = 'SeriesDate';
         topRightParent.appendChild(SeriesDate);
-        divParentElement.appendChild(topRightParent);
         /////////// BOT RIGHT
+        divParentElement.appendChild(topRightParent);
         const botRightParent = document.createElement('div');
 
         botRightParent.style.position="absolute";
