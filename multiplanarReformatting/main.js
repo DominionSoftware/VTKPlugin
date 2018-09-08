@@ -35,8 +35,8 @@ var MultiplanarReformattingPlugin = class MultiplanarReformattingPlugin extends 
         PatientName.id = 'PatientName';
         topLeftParent.appendChild(PatientName);
         divParentElement.appendChild(topLeftParent);
-        PatientId.id = 'PatientId';
         const PatientId = document.createElement('div');
+        PatientId.id = 'PatientId';
         topLeftParent.appendChild(PatientId);
 
         //////////// BOT LEFT
