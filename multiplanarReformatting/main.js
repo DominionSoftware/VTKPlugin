@@ -11,7 +11,6 @@ var MultiplanarReformattingPlugin = class MultiplanarReformattingPlugin extends 
         super("MultiplanarReformattingPlugin");
 
         this.description = "Multiplanar Reformatting OHIF Plugin";
-        this.labelTopLeft1 = undefined;
         OHIF.plugins.VTKDataCache = OHIF.plugins.VTKDataCache || {};
         OHIF.plugins.VTKDataCache.imageDataCache = new Map;
     }
@@ -141,8 +140,8 @@ var MultiplanarReformattingPlugin = class MultiplanarReformattingPlugin extends 
 
 
         const { MPR, ohifInteractorStyleSlice } = VTKUtils;
-        const mode = MPR.computeSlicingMode(scanDirection, viewDirection);
         const imageMapper = actor.getMapper();
+        const mode = MPR.computeSlicingMode(scanDirection, viewDirection);
 
         console.warn(imageData);
         imageMapper.setInputData(imageData);
@@ -177,14 +176,18 @@ var MultiplanarReformattingPlugin = class MultiplanarReformattingPlugin extends 
         interactorStyle.setDisplaySet(displaySet);
         renderWindow.getInteractor().setInteractorStyle(interactorStyle);
 
-
-        renderer.resetCamera();
-        renderer.resetCameraClippingRange();
         console.warn(`scanDirection: ${scanDirection}`);
         console.warn(`viewDirection: ${viewDirection}`);
+        // TODO trying to force update hear.
+        interactorStyle.handleStartMouseWheel();
         interactorStyle.moveSliceByWheel(0);
+        interactorStyle.handleEndMouseWheel();
+
+
         MPR.computeCamera(scanDirection, viewDirection, renderer.getActiveCamera());
 
+        renderer.resetCameraClippingRange();
+        renderer.resetCamera();
         renderWindow.render();
 
     }
