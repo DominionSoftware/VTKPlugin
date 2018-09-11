@@ -24,9 +24,9 @@ var MultiplanarReformattingPlugin = class MultiplanarReformattingPlugin extends 
         // TODO , why aren't style sheets loading?
         divParentElement.style.position = "relative";
         divParentElement.style.color = '#91b9cd';
-        topLeftParent.style.position="absolute";
         ///////// TOP LEFT
         const topLeftParent = document.createElement('div');
+        topLeftParent.style.position="absolute";
         topLeftParent.style.top="10px";
         topLeftParent.id = viewDirection + "TopLeft";
         topLeftParent.style.left="10px";
@@ -40,8 +40,8 @@ var MultiplanarReformattingPlugin = class MultiplanarReformattingPlugin extends 
 
         //////////// BOT LEFT
         divParentElement.appendChild(topLeftParent);
-        botLeftParent.style.position="absolute";
         const botLeftParent = document.createElement('div');
+        botLeftParent.style.position="absolute";
         botLeftParent.style.bottom="10px";
         botLeftParent.style.left="10px";
         botLeftParent.id = viewDirection + "BottomLeft";
@@ -61,23 +61,23 @@ var MultiplanarReformattingPlugin = class MultiplanarReformattingPlugin extends 
         const SeriesDescription = document.createElement('div');
         botLeftParent.appendChild(SeriesDescription);
         SeriesDescription.id = 'SeriesDescription';
-        const topRightParent = document.createElement('div');
+
         /////////// TOP RIGHT
         divParentElement.appendChild(botLeftParent);
-
+        const topRightParent = document.createElement('div');
         topRightParent.style.position="absolute";
         topRightParent.style.top="10px";
         topRightParent.style.right="10px";
         topRightParent.id = viewDirection + "TopRight";
+        const StudyDescription = document.createElement('div');
         StudyDescription.id = 'StudyDescription';
         topRightParent.appendChild(StudyDescription);
-        const StudyDescription = document.createElement('div');
         const SeriesDate = document.createElement('div');
         topRightParent.appendChild(SeriesDate);
         SeriesDate.id = 'SeriesDate';
-        /////////// BOT RIGHT
-        divParentElement.appendChild(topRightParent);
 
+        divParentElement.appendChild(topRightParent);
+        /////////// BOT RIGHT
         const botRightParent = document.createElement('div');
         botRightParent.style.position="absolute";
         botRightParent.style.bottom="10px";
