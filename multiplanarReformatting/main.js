@@ -33,8 +33,8 @@ var MultiplanarReformattingPlugin = class MultiplanarReformattingPlugin extends 
         const PatientName = document.createElement('div');
         PatientName.id = 'PatientName';
         topLeftParent.appendChild(PatientName);
-        divParentElement.appendChild(topLeftParent);
         const PatientId = document.createElement('div');
+        divParentElement.appendChild(topLeftParent);
         PatientId.id = 'PatientId';
         topLeftParent.appendChild(PatientId);
 
@@ -43,27 +43,27 @@ var MultiplanarReformattingPlugin = class MultiplanarReformattingPlugin extends 
         botLeftParent.style.position="absolute";
         const botLeftParent = document.createElement('div');
         botLeftParent.style.bottom="10px";
-        botLeftParent.id = viewDirection + "BottomLeft";
         botLeftParent.style.left="10px";
-        SeriesNumber.id = 'SeriesNumber';
+        botLeftParent.id = viewDirection + "BottomLeft";
         const SeriesNumber = document.createElement('div');
+        SeriesNumber.id = 'SeriesNumber';
         botLeftParent.appendChild(SeriesNumber);
         const SliceNumber = document.createElement('div');
         SliceNumber.id = 'SliceNumber';
         botLeftParent.appendChild(SliceNumber);
         const ColsRows = document.createElement('div');
-        ColsRows.id = 'ColsRows';
         botLeftParent.appendChild(ColsRows);
+        ColsRows.id = 'ColsRows';
         const SliceThickness = document.createElement('div');
 
         SliceThickness.id = 'SliceThickness';
         botLeftParent.appendChild(SliceThickness);
         const SeriesDescription = document.createElement('div');
-        SeriesDescription.id = 'SeriesDescription';
         botLeftParent.appendChild(SeriesDescription);
-        divParentElement.appendChild(botLeftParent);
-        /////////// TOP RIGHT
+        SeriesDescription.id = 'SeriesDescription';
         const topRightParent = document.createElement('div');
+        /////////// TOP RIGHT
+        divParentElement.appendChild(botLeftParent);
 
         topRightParent.style.position="absolute";
         topRightParent.style.top="10px";
@@ -77,21 +77,21 @@ var MultiplanarReformattingPlugin = class MultiplanarReformattingPlugin extends 
         SeriesDate.id = 'SeriesDate';
         /////////// BOT RIGHT
         divParentElement.appendChild(topRightParent);
-        const botRightParent = document.createElement('div');
 
+        const botRightParent = document.createElement('div');
         botRightParent.style.position="absolute";
         botRightParent.style.bottom="10px";
-        botRightParent.style.right="10px";
         botRightParent.id = viewDirection + "BotRight";
+        botRightParent.style.right="10px";
         const Compression = document.createElement('div');
         Compression.id = 'Compression';
         botRightParent.appendChild(Compression);
         const WindowLevel = document.createElement('div');
-        WindowLevel.id = 'WindowLevel';
         botRightParent.appendChild(WindowLevel);
         divParentElement.appendChild(botRightParent);
-    }
 
+        WindowLevel.id = 'WindowLevel';
+    }
     setupViewport(div, viewportData, displaySet) {
         const divParentElement =  div.parentElement;
         const { viewportIndex } = viewportData;
