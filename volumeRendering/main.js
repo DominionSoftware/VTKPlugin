@@ -3,10 +3,11 @@ var VolumeRenderingPlugin = class VolumeRenderingPlugin extends OHIF.plugins.Vie
         super("VolumeRenderingPlugin");
 
         this.description = "VolumeRendering OHIF Plugin";
-
+        // TODO why doesn't expanded : false work??
         this.controllerWidget = vtk.Interaction.UI.vtkVolumeController.newInstance({
             size: [400, 150],
             rescaleColorMap: true,
+            expanded: false
         });
 
         OHIF.plugins.VTKDataCache = OHIF.plugins.VTKDataCache || {};
@@ -17,7 +18,7 @@ var VolumeRenderingPlugin = class VolumeRenderingPlugin extends OHIF.plugins.Vie
         console.warn(`${this.name}: Setup Complete`);
     }
 
-
+    //TODO move to VTKUtils?
     static installVTKVolumeController(volumeController,volumeViewer, actor,dark) {
         const renderWindow = volumeViewer.getRenderWindow();
         volumeController.setupContent(renderWindow, actor, dark);
