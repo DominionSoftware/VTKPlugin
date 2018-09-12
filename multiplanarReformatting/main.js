@@ -6,6 +6,8 @@
 // modifications
 
 
+
+
 var MultiplanarReformattingPlugin = class MultiplanarReformattingPlugin extends OHIF.plugins.ViewportPlugin {
     constructor(options = {}) {
         super("MultiplanarReformattingPlugin");
@@ -92,6 +94,7 @@ var MultiplanarReformattingPlugin = class MultiplanarReformattingPlugin extends 
 
         WindowLevel.id = 'WindowLevel';
     }
+
     setupViewport(div, viewportData, displaySet) {
         const divParentElement =  div.parentElement;
         const { viewportIndex } = viewportData;
@@ -110,22 +113,22 @@ var MultiplanarReformattingPlugin = class MultiplanarReformattingPlugin extends 
         div.innerHTML = '';
 
 
-        const volumeViewer = vtk.Rendering.Misc.vtkGenericRenderWindow.newInstance({
+        const viewer = vtk.Rendering.Misc.vtkGenericRenderWindow.newInstance({
             background: [0, 0, 0],
         });
 
-        volumeViewer.setContainer(div);
+        viewer.setContainer(div);
 
         // TODO: VTK's canvas currently does not fill the viewport element
         // after it has been resized. We need to set the height to 100% and
-        // trigger volumeViewer.resize() whenever things are resized.
+        // trigger viewer.resize() whenever things are resized.
         // We might need to find a way to hook onto the OHIF Viewer ResizeManager
         // div.querySelector('canvas').style.height = '100%';
-        volumeViewer.resize();
+        viewer.resize();
 
         const actor = MultiplanarReformattingPlugin.setupVTKActor(imageData);
-        const renderer = volumeViewer.getRenderer();
-        const renderWindow = volumeViewer.getRenderWindow();
+        const renderer = viewer.getRenderer();
+        const renderWindow = viewer.getRenderWindow();
 
         renderer.addActor(actor);
 
@@ -178,7 +181,7 @@ var MultiplanarReformattingPlugin = class MultiplanarReformattingPlugin extends 
 
         console.warn(`scanDirection: ${scanDirection}`);
         console.warn(`viewDirection: ${viewDirection}`);
-        // TODO trying to force update hear.
+        // Get the current slice set up.
         interactorStyle.handleStartMouseWheel();
         interactorStyle.moveSliceByWheel(0);
         interactorStyle.handleEndMouseWheel();
