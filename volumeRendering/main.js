@@ -18,6 +18,13 @@ var VolumeRenderingPlugin = class VolumeRenderingPlugin extends OHIF.plugins.Vie
         console.warn(`${this.name}: Setup Complete`);
     }
 
+    render(viewportData){
+        viewportData.pluginData.viewer.getRenderWindow().render();
+    }
+
+    static callback(sliceIndex){
+        console.log("callback Volume");
+    }
     //TODO move to VTKUtils?
     static installVTKVolumeController(volumeController,volumeViewer, actor,dark) {
         const renderWindow = volumeViewer.getRenderWindow();
@@ -25,9 +32,8 @@ var VolumeRenderingPlugin = class VolumeRenderingPlugin extends OHIF.plugins.Vie
         volumeController.render();
     }
 
-    setupViewport(div, { viewportIndex = 0 }, displaySet) {
+    setupViewport(div, viewportData, displaySet) {
         const viewportWrapper =  div.parentElement;
-        console.warn(`${this.name}|setupViewport: viewportIndex: ${viewportIndex}`);
 
         if (!displaySet) {
             displaySet = OHIF.plugins.ViewportPlugin.getDisplaySet(viewportIndex);
@@ -35,36 +41,37 @@ var VolumeRenderingPlugin = class VolumeRenderingPlugin extends OHIF.plugins.Vie
       
 
         viewportWrapper.style.position = "relative";
-
+        debugger;
         const { VTKUtils } = window;
-        const imageDataObject = VTKUtils.getImageData(displaySet);
+        const self = this;
+        const imageDataObject = VTKUtils.getImageData(displaySet,VolumeRenderingPlugin.callback,self);
         const imageData = imageDataObject.vtkImageData;
 
         div.innerHTML = '';
 
-        const volumeViewer = vtk.Rendering.Misc.vtkGenericRenderWindow.newInstance({
+        viewportData.pluginData.viewer = vtk.Rendering.Misc.vtkGenericRenderWindow.newInstance({
             background: [0, 0, 0],
         });
 
 
 
-        volumeViewer.setContainer(div);
+        viewportData.pluginData.viewer.setContainer(div);
 
         // TODO: VTK's canvas currently does not fill the viewport element
         // after it has been resized. We need to set the height to 100% and
         // trigger volumeViewer.resize() whenever things are resized.
         // We might need to find a way to hook onto the OHIF Viewer ResizeManager
         // div.querySelector('canvas').style.height = '100%';
-        volumeViewer.resize();
+        viewportData.pluginData.viewer.resize();
 
         const actor = VolumeRenderingPlugin.setupVTKActor(imageData);
 
-        VTKUtils.installVTKViewer(volumeViewer, actor);
+        VTKUtils.installVTKViewer(viewportData.pluginData.viewer, actor);
 
         // TODO we assume for now that the background is "dark".
         const isDark = true;
         this.controllerWidget.setContainer(viewportWrapper);
-        VolumeRenderingPlugin.installVTKVolumeController(this.controllerWidget,volumeViewer,actor,isDark);
+        VolumeRenderingPlugin.installVTKVolumeController(this.controllerWidget,viewportData.pluginData.viewer,actor,isDark);
     }
 
     static setupVTKActor(imageData) {

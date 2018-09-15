@@ -11,16 +11,26 @@
 var MultiplanarReformattingPlugin = class MultiplanarReformattingPlugin extends OHIF.plugins.ViewportPlugin {
     constructor(options = {}) {
         super("MultiplanarReformattingPlugin");
-
         this.description = "Multiplanar Reformatting OHIF Plugin";
         OHIF.plugins.VTKDataCache = OHIF.plugins.VTKDataCache || {};
         OHIF.plugins.VTKDataCache.imageDataCache = new Map;
+
     }
 
     setup() {
         console.warn(`${this.name}: Setup Complete`);
     }
 
+    /**
+     * Call back from Asynchronous loading.
+     * @param self
+     * @param sliceIndex
+     */
+    static callback(self,sliceIndex){
+          if (sliceIndex < 0){
+            self.renderPlugins();
+        }
+    }
     setupViewportText(divParentElement,viewDirection,displaySet){
 
         // TODO , why aren't style sheets loading?
@@ -105,32 +115,34 @@ var MultiplanarReformattingPlugin = class MultiplanarReformattingPlugin extends 
         if (!displaySet) {
             displaySet = OHIF.plugins.ViewportPlugin.getDisplaySet(viewportIndex);
         }
+        const { layoutManager }  = OHIF.viewerbase;
 
         const { VTKUtils } = window;
-        const imageDataObject = VTKUtils.getImageData(displaySet);
+        viewportData.pluginData.viewer = vtk.Rendering.Misc.vtkGenericRenderWindow.newInstance({
+            background: [0, 0, 0],
+        });
+        const self = this;
+        const imageDataObject = VTKUtils.getImageData(displaySet,MultiplanarReformattingPlugin.callback,self);
         const imageData = imageDataObject.vtkImageData;
 
         div.innerHTML = '';
 
 
-        const viewer = vtk.Rendering.Misc.vtkGenericRenderWindow.newInstance({
-            background: [0, 0, 0],
-        });
 
-        viewer.setContainer(div);
+        viewportData.pluginData.viewer.setContainer(div);
+
+        const actor = MultiplanarReformattingPlugin.setupVTKActor(imageData);
+        const renderer =  viewportData.pluginData.viewer.getRenderer();
+        const renderWindow =  viewportData.pluginData.viewer.getRenderWindow();
+
+        renderer.addActor(actor);
 
         // TODO: VTK's canvas currently does not fill the viewport element
         // after it has been resized. We need to set the height to 100% and
         // trigger viewer.resize() whenever things are resized.
         // We might need to find a way to hook onto the OHIF Viewer ResizeManager
         // div.querySelector('canvas').style.height = '100%';
-        viewer.resize();
-
-        const actor = MultiplanarReformattingPlugin.setupVTKActor(imageData);
-        const renderer = viewer.getRenderer();
-        const renderWindow = viewer.getRenderWindow();
-
-        renderer.addActor(actor);
+        viewportData.pluginData.viewer.resize();
 
         const scanDirection = imageDataObject.orientation;
         if (!viewDirection) {
@@ -147,7 +159,7 @@ var MultiplanarReformattingPlugin = class MultiplanarReformattingPlugin extends 
         const mode = MPR.computeSlicingMode(scanDirection, viewDirection);
 
         console.warn(imageData);
-        imageMapper.setInputData(imageData);
+
         imageMapper.setSlicingMode(mode);
 
         const IPP = MPR.computeIPP(imageDataObject);
@@ -169,7 +181,7 @@ var MultiplanarReformattingPlugin = class MultiplanarReformattingPlugin extends 
             xSpacing: imageDataObject.spacing[0],
             ySpacing: imageDataObject.spacing[1],
             zSpacing: imageDataObject.spacing[2]
-        }
+        };
 
         console.warn('initialValues', initialValues);
 
@@ -178,21 +190,41 @@ var MultiplanarReformattingPlugin = class MultiplanarReformattingPlugin extends 
         interactorStyle.setViewDirection(viewDirection);
         interactorStyle.setDisplaySet(displaySet);
         renderWindow.getInteractor().setInteractorStyle(interactorStyle);
+        viewportData.pluginData.observer  = VTKUtils.ohifInteractorObserver.newInstance();
+        viewportData.pluginData.observer.setInteractor(interactorStyle);
+        viewportData.pluginData.observer.setEnabled(1);
 
         console.warn(`scanDirection: ${scanDirection}`);
         console.warn(`viewDirection: ${viewDirection}`);
-        // Get the current slice set up.
+        MPR.computeCamera(scanDirection, viewDirection, renderer.getActiveCamera());
         interactorStyle.handleStartMouseWheel();
         interactorStyle.moveSliceByWheel(0);
         interactorStyle.handleEndMouseWheel();
-
-
-        MPR.computeCamera(scanDirection, viewDirection, renderer.getActiveCamera());
-
         renderer.resetCameraClippingRange();
         renderer.resetCamera();
+        imageData.modified();
         renderWindow.render();
 
+    }
+
+
+    /**
+     * render the plugin with the given viewport data. This
+     * is called at the end of the asynchronous loading to refresh
+     * the Slice view.
+     * @param viewportData
+     */
+    render(viewportData) {
+
+        const renderWindow = viewportData.pluginData.viewer.getRenderWindow();
+        // TODO: VTK's canvas currently does not fill the viewport element
+        // after it has been resized. We need to set the height to 100% and
+        // trigger viewer.resize() whenever things are resized.
+        // We might need to find a way to hook onto the OHIF Viewer ResizeManager
+        // div.querySelector('canvas').style.height = '100%';
+        viewportData.pluginData.viewer.resize();
+
+        renderWindow.render();
     }
 
     static setupVTKActor(imageData) {
@@ -204,7 +236,7 @@ var MultiplanarReformattingPlugin = class MultiplanarReformattingPlugin extends 
 
         return actor;
     }
-}
+};
 
 OHIF.plugins.entryPoints["MultiplanarReformattingPlugin"] = function () {
     const multiplanarReformattingPlugin = new MultiplanarReformattingPlugin();
